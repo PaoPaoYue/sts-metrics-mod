@@ -1,0 +1,17 @@
+{
+  "Metrics:CardPickTips": {
+    "TEXT": [
+      "Pick Rate Statistics",
+      "Among #b",
+      " players' #b",
+      " card drops: NL Total pick rate #y",
+      " NL ACT 1 first pick  #y",
+      " NL ACT 1 duplicate pick #y",
+      " NL ACT 2 first pick #y",
+      " NL ACT 2 duplicate pick #y",
+      " NL ACT 3 (or above) first pick #y",
+      " NL ACT 3 (or above) duplicate pick #y",
+      " NL Updated at #b"
+    ]
+  }
+}
