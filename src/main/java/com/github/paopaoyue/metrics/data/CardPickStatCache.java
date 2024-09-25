@@ -27,7 +27,7 @@ public class CardPickStatCache {
     }
 
     public void fetchFromServer(List<AbstractCard> cards) {
-        // fetch from server
+        IMetricsCaller metricsCaller = RpcApi.getCaller(IMetricsCaller.class);
         MetricsProto.MGetCardPickStatRequest.Builder requestBuilder = MetricsProto.MGetCardPickStatRequest.newBuilder();
         for (AbstractCard card : cards) {
             MetricsProto.CardIdentifier.Builder cardIdentifierBuilder = MetricsProto.CardIdentifier.newBuilder();
@@ -36,14 +36,15 @@ public class CardPickStatCache {
             cardIdentifierBuilder.setUpgraded(card.upgraded);
             requestBuilder.addCardIdentifiers(cardIdentifierBuilder.build());
         }
-        IMetricsCaller metricsCaller = RpcApi.getCaller(IMetricsCaller.class);
+        MetricsProto.MGetCardPickStatRequest request = requestBuilder.build();
+        logger.info("MGetCardPickStat request: {}", request);
         MetricsProto.MGetCardPickStatResponse response = metricsCaller.mGetCardPickStat(
                 requestBuilder.build(),
                 new CallOption().setTimeout(Duration.ofSeconds(3)));
         if (!RespBaseUtil.isOK(response.getBase())) {
             logger.error("Failed to fetch card pick stat from server: {}", response.getBase().getMessage());
         } else {
-            logger.info("response: {}", response);
+            logger.info("MGetCardPickStat response: {}", response);
             for (MetricsProto.CardPickStat stat : response.getCardPickStatsList()) {
                 CardPickStatData statData = new CardPickStatData();
                 statData.cardId = stat.getCardIdentifier().getCardId();
