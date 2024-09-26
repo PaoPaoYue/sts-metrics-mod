@@ -56,17 +56,20 @@ public class RenderCardTipsPatch {
             return;
         }
         try {
-            String description = getDescription(card, data);
+            String description = getDescription(data);
             float textHeight = -FontHelper.getSmartHeight(FontHelper.tipBodyFont, description, BODY_TEXT_WIDTH, TIP_DESC_LINE_SPACING) - 7.0F * Settings.scale;
             Reflect.setStaticPrivate(TipHelper.class, "textHeight", textHeight);
-            renderTipBoxMethod.invoke(null, x, y, sb, uiStrings.TEXT[0], getDescription(card, data));
+            renderTipBoxMethod.invoke(null, x, y, sb, getTitle(), getDescription(data));
         } catch (IllegalAccessException | InvocationTargetException e) {
             logger.error(e.getMessage(), e);
         }
     }
 
+    public static String getTitle() {
+        return uiStrings.TEXT[0];
+    }
 
-    private static String getDescription(AbstractCard card, CardPickStatData data) {
+    public static String getDescription(CardPickStatData data) {
         return uiStrings.TEXT[1] + data.samplePlayers +
                 uiStrings.TEXT[2] + data.sampleSize +
                 uiStrings.TEXT[3] + data.pickRate +
