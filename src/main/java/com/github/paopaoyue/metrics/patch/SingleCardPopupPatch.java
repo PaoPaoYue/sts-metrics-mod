@@ -1,23 +1,22 @@
 package com.github.paopaoyue.metrics.patch;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.evacipated.cardcrawl.modthespire.lib.*;
 import com.github.paopaoyue.metrics.MetricsMod;
 import com.github.paopaoyue.metrics.data.CardPickStatData;
 import com.github.paopaoyue.metrics.utility.Async;
-import com.github.paopaoyue.metrics.utility.Inject;
 import com.github.paopaoyue.metrics.utility.Reflect;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.cards.CardGroup;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.FontHelper;
-import com.megacrit.cardcrawl.helpers.PowerTip;
+import com.megacrit.cardcrawl.helpers.TipHelper;
 import com.megacrit.cardcrawl.screens.SingleCardViewPopup;
 import javassist.CtBehavior;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 public class SingleCardPopupPatch {
@@ -133,12 +132,19 @@ public class SingleCardPopupPatch {
     public static class PopupRenderTipsPatch {
 
         @SpireInsertPatch(
-                locator = Locator.class,
-                localvars = {"t"}
+                locator = Locator.class
         )
-        public static void Insert(SingleCardViewPopup __instance, ArrayList<PowerTip> t) {
+        public static void Insert(SingleCardViewPopup __instance, SpriteBatch sb) {
             if (cardPickStatData != null) {
-                t.add(new PowerTip(RenderCardTipsPatch.getTitle(), RenderCardTipsPatch.getDescription(cardPickStatData)));
+                try {
+                    String title = RenderCardTipsPatch.getTitle();
+                    String description = RenderCardTipsPatch.getDescription(cardPickStatData);
+                    float textHeight = -FontHelper.getSmartHeight(FontHelper.tipBodyFont, description, RenderCardTipsPatch.BODY_TEXT_WIDTH, RenderCardTipsPatch.TIP_DESC_LINE_SPACING) - 7.0F * Settings.scale;
+                    Reflect.setStaticPrivate(TipHelper.class, "textHeight", textHeight);
+                    RenderCardTipsPatch.renderTipBoxMethod.invoke(null, Settings.WIDTH / 2f - 660.0f * Settings.scale, Settings.HEIGHT / 2f - 140f * Settings.yScale, sb, title, description);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    logger.error(e.getMessage(), e);
+                }
             }
         }
 

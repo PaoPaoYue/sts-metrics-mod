@@ -27,10 +27,10 @@ public class RenderCardTipsPatch {
 
     private static final UIStrings uiStrings = CardCrawlGame.languagePack.getUIString("Metrics:CardPickTips");
 
-    private static final float BODY_TEXT_WIDTH = 280.0F * Settings.scale;
-    private static final float TIP_DESC_LINE_SPACING = 26.0F * Settings.scale;
+    static final float BODY_TEXT_WIDTH = 280.0F * Settings.scale;
+    static final float TIP_DESC_LINE_SPACING = 26.0F * Settings.scale;
 
-    private static Method renderTipBoxMethod;
+    static Method renderTipBoxMethod;
 
     static {
         try {
