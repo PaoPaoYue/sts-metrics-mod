@@ -127,15 +127,13 @@ public class MetricsData {
                         .build());
             }
             MetricsProto.MCreateCardPickRequest request = builder.build();
-            logger.info("MCreateCardPick request: {}", request);
+            logger.info("flushing card pick data to server: {} picked, {} unpicked", cardPickData.pickedCards.size(), cardPickData.notPickedCards.size());
             MetricsProto.MCreateCardPickResponse response = metricsCaller.mCreateCardPick(
                     request,
                     new CallOption().setTimeout(Duration.ofSeconds(3))
             );
             if (!RespBaseUtil.isOK(response.getBase())) {
                 logger.error("Failed to flush card pick data to server: {}", response.getBase().getMessage());
-            } else {
-                logger.info("MCreateCardPick response: {}", response);
             }
         }
         this.cardPickList.clear();

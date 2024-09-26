@@ -54,7 +54,6 @@ public class CardPickStatCache {
     }
 
     public void fetch(MetricsProto.MGetCardPickStatRequest request) {
-        logger.info("MGetCardPickStat request: {}", request);
         IMetricsCaller metricsCaller = RpcApi.getCaller(IMetricsCaller.class);
         MetricsProto.MGetCardPickStatResponse response = metricsCaller.mGetCardPickStat(
                 request,
@@ -62,7 +61,6 @@ public class CardPickStatCache {
         if (!RespBaseUtil.isOK(response.getBase())) {
             logger.error("Failed to fetch card pick stat from server: {}", response.getBase().getMessage());
         } else {
-            logger.info("MGetCardPickStat response: {}", response);
             for (MetricsProto.CardPickStat stat : response.getCardPickStatsList()) {
                 CardPickStatData statData = new CardPickStatData();
                 statData.cardId = stat.getCardIdentifier().getCardId();
