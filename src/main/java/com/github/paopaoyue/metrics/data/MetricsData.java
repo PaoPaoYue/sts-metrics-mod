@@ -91,7 +91,7 @@ public class MetricsData {
                             .setUserName(this.playerName)
                             .setCharacterName(this.characterName)
                             .setRegion(this.region)
-                            .setTimestamp((int) (System.currentTimeMillis() / 1000));
+                            .setTimestamp(System.currentTimeMillis() / 1000);
             for (int i = 0; i < cardPickData.pickedCards.size(); i++) {
                 AbstractCard card = cardPickData.pickedCards.get(i);
                 builder.addPicked(MetricsProto.CardPick.newBuilder()

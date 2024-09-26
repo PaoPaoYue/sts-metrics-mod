@@ -16,7 +16,7 @@ public class AcquireCardPatch {
 
     @SpirePrefixPatch
     public static void Prefix(CardRewardScreen _instance, AbstractCard hoveredCard) {
-        hoveredCard = hoveredCard.makeSameInstanceOf();
+        CardFieldPatch.pickRate.set(hoveredCard, null);
     }
 
     @SpirePostfixPatch
