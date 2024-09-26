@@ -61,7 +61,7 @@ public class MetricsData {
     private String region;
 
     // Card pick data
-    private List<CardPickData> cardPickList = new ArrayList<>();
+    private final List<CardPickData> cardPickList = new ArrayList<>();
 
     public void reset() {
         this.playerName = CardCrawlGame.playerName;
@@ -70,6 +70,8 @@ public class MetricsData {
         this.act = AbstractDungeon.actNum;
         this.floor = AbstractDungeon.floorNum;
         this.ascensionLevel = AbstractDungeon.ascensionLevel;
+
+        cardPickList.clear();
     }
 
     public void updateFloor() {
