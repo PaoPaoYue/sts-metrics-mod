@@ -43,7 +43,7 @@ tasks.register<Delete>("cleanDevFolder") {
 }
 
 tasks.register<Delete>("cleanPublishFolder") {
-    delete(fileTree("E:\\Steam Games\\steamapps\\common\\SlayTheSpire\\rpc-mod\\content") { include("*.jar") })
+    delete(fileTree("E:\\Steam Games\\steamapps\\common\\SlayTheSpire\\metrics-mod\\content") { include("*.jar") })
 }
 
 tasks.register<Copy>("deployToDevFolder") {
@@ -57,7 +57,7 @@ tasks.register<Copy>("deployToPublishFolder") {
     dependsOn(tasks.clean, tasks.jar)
     from(layout.buildDirectory.dir("libs"))
     include("*.jar")
-    into(layout.buildDirectory.dir("E:\\Steam Games\\steamapps\\common\\SlayTheSpire\\rpc-mod\\content"))
+    into(layout.buildDirectory.dir("E:\\Steam Games\\steamapps\\common\\SlayTheSpire\\metrics-mod\\content"))
 }
 
 tasks.register<Exec>("runGame") {
@@ -69,5 +69,5 @@ tasks.register<Exec>("runGame") {
 tasks.register<Exec>("publishMod") {
     dependsOn(":cleanPublishFolder", ":deployToPublishFolder")
     workingDir("E:\\Steam Games\\steamapps\\common\\SlayTheSpire")
-    commandLine("cmd", "/c", "java -jar mod-uploader.jar upload -w rpc-mod")
+    commandLine("cmd", "/c", "java -jar mod-uploader.jar upload -w metrics-mod")
 }
