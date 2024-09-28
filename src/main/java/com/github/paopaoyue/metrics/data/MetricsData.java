@@ -4,6 +4,10 @@ import com.github.paopaoyue.metrics.api.IMetricsCaller;
 import com.github.paopaoyue.metrics.proto.MetricsProto;
 import com.github.paopaoyue.rpcmod.RpcApi;
 import com.megacrit.cardcrawl.cards.AbstractCard;
+import com.megacrit.cardcrawl.characters.Defect;
+import com.megacrit.cardcrawl.characters.Ironclad;
+import com.megacrit.cardcrawl.characters.TheSilent;
+import com.megacrit.cardcrawl.characters.Watcher;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
@@ -11,6 +15,7 @@ import io.github.paopaoyue.mesh.rpc.api.CallOption;
 import io.github.paopaoyue.mesh.rpc.util.RespBaseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.Sys;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -66,6 +71,15 @@ public class MetricsData {
     public void reset() {
         this.playerName = CardCrawlGame.playerName;
         this.characterName = AbstractDungeon.player.name;
+        if (AbstractDungeon.player instanceof Ironclad) {
+            this.characterName = "ironclad";
+        } else if (AbstractDungeon.player instanceof TheSilent) {
+            this.characterName = "silent";
+        } else if (AbstractDungeon.player instanceof Defect) {
+            this.characterName = "defect";
+        } else if (AbstractDungeon.player instanceof Watcher) {
+            this.characterName = "watcher";
+        }
         this.region = languageToRegionMap.getOrDefault(Settings.language, "en");
         this.act = AbstractDungeon.actNum;
         this.floor = AbstractDungeon.floorNum;
