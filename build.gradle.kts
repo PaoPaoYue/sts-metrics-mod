@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.github.paopaoyue"
-version = "0.0.5-SNAPSHOT"
+version = "0.1.0-SNAPSHOT"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
