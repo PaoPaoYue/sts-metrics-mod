@@ -1,5 +1,6 @@
 package com.github.paopaoyue.metrics.data;
 
+import com.github.paopaoyue.metrics.MetricsMod;
 import com.github.paopaoyue.metrics.api.IMetricsCaller;
 import com.github.paopaoyue.metrics.proto.MetricsProto;
 import com.github.paopaoyue.metrics.utility.ExpiringCache;

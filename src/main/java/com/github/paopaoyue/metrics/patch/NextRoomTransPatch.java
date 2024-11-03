@@ -34,7 +34,11 @@ public class NextRoomTransPatch {
     @SpirePostfixPatch
     public static void Postfix(AbstractDungeon __instance) {
         Async.run(() -> {
-            MetricsMod.metricsData.flushToServer();
+            try {
+                MetricsMod.metricsData.flushToServer();
+            } catch (Exception e) {
+                MetricsMod.logger.error("Failed to flush data to server", e);
+            }
         });
 
         MetricsMod.metricsData.updateFloor();

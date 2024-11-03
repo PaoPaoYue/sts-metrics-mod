@@ -29,6 +29,7 @@ public class SingleCardPopupPatch {
 
 
     private static void setCardPickStatData(SingleCardViewPopup popup) {
+        if (MetricsMod.isDisplayDisabled()) return;
         Async.run(() -> {
             try {
                 Thread.sleep(DEBOUNCE_DELAY_MS);
@@ -95,7 +96,6 @@ public class SingleCardPopupPatch {
                 locator = Locator.class
         )
         public static void Insert(SingleCardViewPopup __instance) {
-            logger.info("UpdateUpgradePreviewPatch");
             cardPickStatData = null;
             setCardPickStatData(__instance);
         }
@@ -118,6 +118,7 @@ public class SingleCardPopupPatch {
 
         @SpirePostfixPatch
         public static void Postfix(SingleCardViewPopup __instance, SpriteBatch sb) {
+            if (MetricsMod.isDisplayDisabled()) return;
             if (cardPickStatData != null) {
                 FontHelper.renderFont(sb, FontHelper.SCP_cardEnergyFont, cardPickStatData.pickRate, Settings.WIDTH / 2.0f + 80.0f * Settings.scale, Settings.HEIGHT / 2.0f - 360.0f * Settings.scale, Settings.CREAM_COLOR);
             }
@@ -135,6 +136,7 @@ public class SingleCardPopupPatch {
                 locator = Locator.class
         )
         public static void Insert(SingleCardViewPopup __instance, SpriteBatch sb) {
+            if (MetricsMod.isDisplayDisabled()) return;
             if (cardPickStatData != null) {
                 try {
                     String title = RenderCardTipsPatch.getTitle();

@@ -15,7 +15,6 @@ import io.github.paopaoyue.mesh.rpc.api.CallOption;
 import io.github.paopaoyue.mesh.rpc.util.RespBaseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.Sys;
 
 import java.time.Duration;
 import java.util.ArrayList;

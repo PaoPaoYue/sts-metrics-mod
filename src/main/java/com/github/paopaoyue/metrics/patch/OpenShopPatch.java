@@ -21,6 +21,7 @@ public class OpenShopPatch {
 
     @SpirePostfixPatch
     public static void Postfix(ShopScreen __instance) {
+        if (MetricsMod.isDisplayDisabled()) return;
         Async.run(() -> {
             List<AbstractCard> cardsToFetch = new ArrayList<>();
             for (AbstractCard card : __instance.coloredCards) {

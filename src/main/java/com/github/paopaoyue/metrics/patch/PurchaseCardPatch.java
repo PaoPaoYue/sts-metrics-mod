@@ -20,7 +20,7 @@ public class PurchaseCardPatch {
     @SpireInsertPatch(
             locator = Locator.class
     )
-    public static void Prefix(ShopScreen _instance, AbstractCard hoveredCard) {
+    public static void Prefix(ShopScreen __instance, AbstractCard hoveredCard) {
         CardFieldPatch.pickRate.set(hoveredCard, null);
     }
 

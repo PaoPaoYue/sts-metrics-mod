@@ -3,6 +3,7 @@ package com.github.paopaoyue.metrics.patch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePostfixPatch;
+import com.github.paopaoyue.metrics.MetricsMod;
 import com.github.paopaoyue.metrics.data.CardPickStatData;
 import com.github.paopaoyue.metrics.utility.Reflect;
 import com.megacrit.cardcrawl.cards.AbstractCard;
@@ -43,6 +44,7 @@ public class RenderCardTipsPatch {
 
     @SpirePostfixPatch
     public static void Postfix(float x, float y, SpriteBatch sb) {
+        if (MetricsMod.isDisplayDisabled()) return;
         Boolean isCard = Reflect.getStaticPrivate(TipHelper.class,"isCard", Boolean.class);
         if (Boolean.FALSE.equals(isCard)) {
             return;
