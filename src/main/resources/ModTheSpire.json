@@ -1,6 +1,6 @@
 {
-  "modid": "sts-metrics",
-  "name": "STS Metrics",
+  "modid": "sts-metrics-local",
+  "name": "STS Metrics Local",
   "author_list": [
     "PaoPaoYue"
   ],
@@ -9,8 +9,7 @@
   "sts_version": "12-12-2020",
   "mts_version": "3.10.1",
   "dependencies": [
-    "basemod",
-    "ypp-rpc"
+    "basemod"
   ]
 }
 

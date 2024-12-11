@@ -1,155 +1,169 @@
 package com.github.paopaoyue.metrics.data;
 
-import com.github.paopaoyue.metrics.api.IMetricsCaller;
-import com.github.paopaoyue.metrics.proto.MetricsProto;
-import com.github.paopaoyue.rpcmod.RpcApi;
-import com.megacrit.cardcrawl.cards.AbstractCard;
-import com.megacrit.cardcrawl.characters.Defect;
-import com.megacrit.cardcrawl.characters.Ironclad;
-import com.megacrit.cardcrawl.characters.TheSilent;
-import com.megacrit.cardcrawl.characters.Watcher;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.google.gson.JsonSyntaxException;
+import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
-import com.megacrit.cardcrawl.core.Settings;
-import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
-import io.github.paopaoyue.mesh.rpc.api.CallOption;
-import io.github.paopaoyue.mesh.rpc.util.RespBaseUtil;
+import com.megacrit.cardcrawl.screens.stats.RunData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static basemod.BaseMod.gson;
 
 public class MetricsData {
 
     private static final Logger logger = LogManager.getLogger(MetricsData.class);
 
-    private static final Map<Settings.GameLanguage, String> languageToRegionMap = new HashMap<>();
+    private final Map<String, CardPickData> cardPickDataMap = new HashMap<>();
 
-    static {
-        languageToRegionMap.put(Settings.GameLanguage.ENG, "en");
-        languageToRegionMap.put(Settings.GameLanguage.DUT, "nl");
-        languageToRegionMap.put(Settings.GameLanguage.EPO, "eo");
-        languageToRegionMap.put(Settings.GameLanguage.PTB, "pt-BR");
-        languageToRegionMap.put(Settings.GameLanguage.ZHS, "cn");
-        languageToRegionMap.put(Settings.GameLanguage.ZHT, "tw");
-        languageToRegionMap.put(Settings.GameLanguage.FIN, "fi");
-        languageToRegionMap.put(Settings.GameLanguage.FRA, "fr");
-        languageToRegionMap.put(Settings.GameLanguage.DEU, "de");
-        languageToRegionMap.put(Settings.GameLanguage.GRE, "el");
-        languageToRegionMap.put(Settings.GameLanguage.IND, "id");
-        languageToRegionMap.put(Settings.GameLanguage.ITA, "it");
-        languageToRegionMap.put(Settings.GameLanguage.JPN, "ja");
-        languageToRegionMap.put(Settings.GameLanguage.KOR, "ko");
-        languageToRegionMap.put(Settings.GameLanguage.NOR, "no");
-        languageToRegionMap.put(Settings.GameLanguage.POL, "pl");
-        languageToRegionMap.put(Settings.GameLanguage.RUS, "ru");
-        languageToRegionMap.put(Settings.GameLanguage.SPA, "es");
-        languageToRegionMap.put(Settings.GameLanguage.SRP, "sr");
-        languageToRegionMap.put(Settings.GameLanguage.SRB, "sr");
-        languageToRegionMap.put(Settings.GameLanguage.THA, "th");
-        languageToRegionMap.put(Settings.GameLanguage.TUR, "tr");
-        languageToRegionMap.put(Settings.GameLanguage.UKR, "uk");
-        languageToRegionMap.put(Settings.GameLanguage.VIE, "vi");
-        languageToRegionMap.put(Settings.GameLanguage.WWW, "www");
+    public CardPickData getOrCreateCardPickData(String cardID) {
+        if (!cardPickDataMap.containsKey(cardID)) {
+            cardPickDataMap.put(cardID, new CardPickData(cardID));
+        }
+        return cardPickDataMap.get(cardID);
     }
-
-    // General data
-    private String playerName;
-    private String characterName;
-    private int act;
-    private int floor;
-    private int ascensionLevel;
-    private String region;
-
-    // Card pick data
-    private final List<CardPickData> cardPickList = new ArrayList<>();
 
     public void reset() {
-        this.playerName = CardCrawlGame.playerName;
-        this.characterName = AbstractDungeon.player.name;
-        if (AbstractDungeon.player instanceof Ironclad) {
-            this.characterName = "ironclad";
-        } else if (AbstractDungeon.player instanceof TheSilent) {
-            this.characterName = "silent";
-        } else if (AbstractDungeon.player instanceof Defect) {
-            this.characterName = "defect";
-        } else if (AbstractDungeon.player instanceof Watcher) {
-            this.characterName = "watcher";
-        }
-        this.region = languageToRegionMap.getOrDefault(Settings.language, "en");
-        this.act = AbstractDungeon.actNum;
-        this.floor = AbstractDungeon.floorNum;
-        this.ascensionLevel = AbstractDungeon.ascensionLevel;
-
-        cardPickList.clear();
+        this.cardPickDataMap.clear();
     }
 
-    public void updateFloor() {
-        this.floor = AbstractDungeon.floorNum;
-        this.act = AbstractDungeon.actNum;
-        this.ascensionLevel = AbstractDungeon.ascensionLevel;
-    }
+    public void LoadRunData() {
+        FileHandle[] folders = Gdx.files.local("runs").list();
+        int amt = folders.length;
+        for (int i = 0; i < amt; i++) {
+            FileHandle folder = folders[i];
 
-    public void addCardPickData(CardPickData cardPickData) {
-        cardPickList.add(cardPickData);
-    }
-
-    public void flushToServer() {
-        IMetricsCaller metricsCaller = RpcApi.getCaller(IMetricsCaller.class);
-        for (CardPickData cardPickData : cardPickList) {
-            MetricsProto.MCreateCardPickRequest.Builder builder = MetricsProto.MCreateCardPickRequest.newBuilder()
-                            .setLevel(this.floor)
-                            .setAscension(this.ascensionLevel)
-                            .setUserName(this.playerName)
-                            .setCharacterName(this.characterName)
-                            .setRegion(this.region)
-                            .setTimestamp(System.currentTimeMillis() / 1000);
-            for (int i = 0; i < cardPickData.pickedCards.size(); i++) {
-                AbstractCard card = cardPickData.pickedCards.get(i);
-                builder.addPicked(MetricsProto.CardPick.newBuilder()
-                        .setCardIdentifier(
-                                MetricsProto.CardIdentifier.newBuilder()
-                                        .setClasspath(card.getClass().getName())
-                                        .setCardId(card.cardID)
-                                        .setUpgraded(card.upgraded)
-                                        .build()
-                        )
-                        .setCardType(card.type.name())
-                        .setCardRarity(card.rarity.name())
-                        .setCardCost(card.cost)
-                        .setNumInDeck(cardPickData.pickedCardsNumInDeck.get(i))
-                        .build());
+            if (CardCrawlGame.saveSlot == 0) {
+                if (folder.name().contains("0_") || folder.name().contains("1_") || folder.name().contains("2_")) {
+                    continue;
+                }
+            } else {
+                if (!folder.name().contains(CardCrawlGame.saveSlot + "_")) {
+                    continue;
+                }
             }
-            for (int i = 0; i < cardPickData.notPickedCards.size(); i++) {
-                AbstractCard card = cardPickData.notPickedCards.get(i);
-                builder.addUnpicked(MetricsProto.CardPick.newBuilder()
-                        .setCardIdentifier(
-                                MetricsProto.CardIdentifier.newBuilder()
-                                        .setClasspath(card.getClass().getName())
-                                        .setCardId(card.cardID)
-                                        .setUpgraded(card.upgraded)
-                                        .build()
-                        )
-                        .setCardType(card.type.name())
-                        .setCardRarity(card.rarity.name())
-                        .setCardCost(card.cost)
-                        .setNumInDeck(cardPickData.notPickedCardsNumInDeck.get(i))
-                        .build());
-            }
-            MetricsProto.MCreateCardPickRequest request = builder.build();
-            logger.info("flushing card pick data to server: {} picked, {} unpicked", cardPickData.pickedCards.size(), cardPickData.notPickedCards.size());
-            MetricsProto.MCreateCardPickResponse response = metricsCaller.mCreateCardPick(
-                    request,
-                    new CallOption().setTimeout(Duration.ofSeconds(3))
-            );
-            if (!RespBaseUtil.isOK(response.getBase())) {
-                logger.error("Failed to flush card pick data to server: {}", response.getBase().getMessage());
+
+            FileHandle[] files = folder.list();
+
+            for (int j = 0; j < files.length; j++) {
+                FileHandle file = files[j];
+                try {
+                    RunData data = (RunData) gson.fromJson(file.readString(), RunData.class);
+                    if (data != null && data.timestamp == null) {
+                        data.timestamp = file.nameWithoutExtension();
+                        String exampleDaysSinceUnixStr = "17586";
+                        boolean assumeDaysSinceUnix = (data.timestamp
+                                .length() == exampleDaysSinceUnixStr.length());
+                        if (assumeDaysSinceUnix)
+                            try {
+                                long days = Long.parseLong(data.timestamp);
+                                data.timestamp = Long.toString(days * 86400L);
+                            } catch (NumberFormatException var18) {
+                                logger.info(
+                                        "Run file " + file.path() +
+                                                " name is could not be parsed into a Timestamp.");
+                                data = null;
+                            }
+                    }
+                    if (data != null)
+                        try {
+                            AbstractPlayer.PlayerClass.valueOf(data.character_chosen);
+                            this.addFromRunData(data);
+                        } catch (NullPointerException | IllegalArgumentException var17) {
+                            logger.info("Run file " + file.path() +
+                                    " does not use a real character or mod not enabled: " +
+                                    data.character_chosen);
+                        }
+                } catch (JsonSyntaxException ex) {
+                    logger.info("Failed to load RunData from JSON file: " + file.path());
+                }
             }
         }
-        this.cardPickList.clear();
+    }
+
+    private void addFromRunData(RunData runData) {
+        Set<String> pickedCards = new HashSet<>();
+        runData.card_choices.forEach(choice -> {
+            if (choice.picked == "SKIP")
+                choice.picked = null;
+            this.addCardPickData(choice.picked, choice.not_picked, pickedCards, choice.floor);
+            if (choice.picked != null)
+                pickedCards.add(choice.picked);
+        });
+    }
+
+    private void addCardPickData(String picked, List<String> notPicked, Set<String> deck, int floorNum) {
+        if (picked != null) {
+            if (!cardPickDataMap.containsKey(picked)) {
+                cardPickDataMap.put(picked, new CardPickData(picked));
+            }
+        }
+        for (String metricsID : notPicked) {
+            if (!cardPickDataMap.containsKey(metricsID)) {
+                cardPickDataMap.put(metricsID, new CardPickData(metricsID));
+            }
+        }
+
+        if (picked != null) {
+            CardPickData data = cardPickDataMap.get(picked);
+            boolean isDuplicate = deck.contains(picked);
+            data.picks++;
+            data.drops++;
+            if (floorNum < 17) {
+                if (!isDuplicate) {
+                    data.firstPicksF1++;
+                    data.firstDropsF1++;
+                } else {
+                    data.duplicatePicksF1++;
+                    data.duplicateDropsF1++;
+                }
+            } else if (floorNum < 34) {
+                if (!isDuplicate) {
+                    data.firstPicksF2++;
+                    data.firstDropsF2++;
+                } else {
+                    data.duplicatePicksF2++;
+                    data.duplicateDropsF2++;
+                }
+            } else {
+                if (!isDuplicate) {
+                    data.firstPicksF3++;
+                    data.firstDropsF3++;
+                } else {
+                    data.duplicatePicksF3++;
+                    data.duplicateDropsF3++;
+                }
+            }
+        }
+
+        for (String metricsID : notPicked) {
+            CardPickData data = cardPickDataMap.get(metricsID);
+            boolean isDuplicate = deck.contains(picked);
+            data.drops++;
+            if (floorNum < 17) {
+                if (!isDuplicate) {
+                    data.firstDropsF1++;
+                } else {
+                    data.duplicateDropsF1++;
+                }
+            } else if (floorNum < 34) {
+                if (!isDuplicate) {
+                    data.firstDropsF2++;
+                } else {
+                    data.duplicateDropsF2++;
+                }
+            } else {
+                if (!isDuplicate) {
+                    data.firstDropsF3++;
+                } else {
+                    data.duplicateDropsF3++;
+                }
+            }
+        }
+
     }
 
 }

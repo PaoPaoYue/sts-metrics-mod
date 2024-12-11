@@ -1,11 +1,9 @@
 package com.github.paopaoyue.metrics.data;
 
-import java.time.LocalDateTime;
-
 public class CardPickStatData {
-    public String cardId;
 
     public String pickRate = "--%";
+    public int sampleSize;
 
     public String firstPickRateF1 = "--%";
     public String firstPickRateF2 = "--%";
@@ -14,7 +12,5 @@ public class CardPickStatData {
     public String duplicatePickRateF2 = "--%";
     public String duplicatePickRateF3 = "--%";
 
-    public int samplePlayers;
-    public long sampleSize;
-    public String generatedTime;
+
 }

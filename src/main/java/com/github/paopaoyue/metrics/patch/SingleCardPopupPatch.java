@@ -3,8 +3,10 @@ package com.github.paopaoyue.metrics.patch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.evacipated.cardcrawl.modthespire.lib.*;
 import com.github.paopaoyue.metrics.MetricsMod;
+import com.github.paopaoyue.metrics.data.CardPickData;
 import com.github.paopaoyue.metrics.data.CardPickStatData;
 import com.github.paopaoyue.metrics.utility.Async;
+import com.github.paopaoyue.metrics.utility.Inject;
 import com.github.paopaoyue.metrics.utility.Reflect;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.cards.CardGroup;
@@ -30,31 +32,14 @@ public class SingleCardPopupPatch {
 
     private static void setCardPickStatData(SingleCardViewPopup popup) {
         if (MetricsMod.isDisplayDisabled()) return;
-        Async.run(() -> {
-            try {
-                Thread.sleep(DEBOUNCE_DELAY_MS);
-            } catch (InterruptedException e) {
-                logger.error(e.getMessage(), e);
-            }
-
-            AbstractCard card = Reflect.getPrivate(SingleCardViewPopup.class, popup, "card", AbstractCard.class);
-            Boolean upgraded = Reflect.getStaticPrivate(SingleCardViewPopup.class, "isViewingUpgrade", Boolean.class);
-            if (card == null || upgraded == null) {
-                logger.error("Failed to get card or upgraded from SingleCardViewPopup");
-                return;
-            }
-            cardPickStatData = MetricsMod.cardPickStatCache.get(card.cardID, upgraded);
-            if (cardPickStatData == null) {
-
-                AbstractCard finalCard = Reflect.getPrivate(SingleCardViewPopup.class, popup, "card", AbstractCard.class);
-                if (finalCard == null || finalCard != card) {
-                    return;
-                }
-
-                MetricsMod.cardPickStatCache.fetchFromServer(card.getClass(), card.cardID, upgraded);
-                cardPickStatData = MetricsMod.cardPickStatCache.get(card);
-            }
-        });
+        AbstractCard card = Reflect.getPrivate(SingleCardViewPopup.class, popup, "card", AbstractCard.class);
+        Boolean upgraded = Reflect.getStaticPrivate(SingleCardViewPopup.class, "isViewingUpgrade", Boolean.class);
+        String metricID = card.cardID;
+        if (upgraded) {
+            metricID = metricID + "+1";
+        }
+        CardPickData cardPickData = MetricsMod.metricsData.getOrCreateCardPickData(metricID);
+        cardPickStatData = cardPickData.generateStatData();
     }
 
     @SpirePatch2(
@@ -104,7 +89,7 @@ public class SingleCardPopupPatch {
 
             public int[] Locate(CtBehavior ctMethodToPatch) throws Exception {
                 Matcher finalMatcher = new Matcher.FieldAccessMatcher(SingleCardViewPopup.class, "isViewingUpgrade");
-                return LineFinder.findInOrder(ctMethodToPatch, new ArrayList<>(), finalMatcher);
+                return Inject.insertAfter(LineFinder.findInOrder(ctMethodToPatch, new ArrayList<>(), finalMatcher), 1);
             }
         }
 

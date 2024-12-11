@@ -1,21 +1,13 @@
 plugins {
     id("java")
-    id("org.springframework.boot") version ("2.7.18")
-    id("io.spring.dependency-management") version "1.0.15.RELEASE"
-    id("io.github.paopaoyue.ypp-rpc-generator") version "0.1.0-jdk8"
 }
 
 group = "com.github.paopaoyue"
-version = "0.1.0-SNAPSHOT"
+version = "0.1.0-local"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
-}
-
-rpcGenerator {
-    serviceName = "metrics"
-    serviceShortAlias = "metrics"
 }
 
 repositories {
@@ -23,11 +15,9 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter")
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 
-    implementation(files("C:\\Users\\LENOVO\\Desktop\\projects\\rpc-mod\\build\\libs\\rpc-mod-0.1.1-stsMod.jar"))
     implementation(files("C:\\Users\\LENOVO\\Desktop\\projects\\mtsLib\\BaseMod.jar"))
     implementation(files("C:\\Users\\LENOVO\\Desktop\\projects\\mtsLib\\desktop-1.0.jar"))
     implementation(files("C:\\Users\\LENOVO\\Desktop\\projects\\mtsLib\\ModTheSpire.jar"))

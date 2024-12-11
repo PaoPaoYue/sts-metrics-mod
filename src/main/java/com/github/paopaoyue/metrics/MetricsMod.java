@@ -9,7 +9,6 @@ import com.evacipated.cardcrawl.modthespire.Loader;
 import com.evacipated.cardcrawl.modthespire.ModInfo;
 import com.evacipated.cardcrawl.modthespire.lib.SpireConfig;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
-import com.github.paopaoyue.metrics.data.CardPickStatCache;
 import com.github.paopaoyue.metrics.data.MetricsData;
 import com.google.gson.Gson;
 import com.megacrit.cardcrawl.core.Settings;
@@ -28,11 +27,9 @@ public class MetricsMod implements StartGameSubscriber, EditStringsSubscriber, P
 
     public static final Logger logger = LogManager.getLogger(MetricsMod.class);
 
-    public static final String MOD_ID = "sts-metrics";
+    public static final String MOD_ID = "sts-metrics-local";
 
     public static MetricsData metricsData = new MetricsData();
-
-    public static CardPickStatCache cardPickStatCache = new CardPickStatCache();
 
     private static SpireConfig config = null;
 
@@ -95,11 +92,14 @@ public class MetricsMod implements StartGameSubscriber, EditStringsSubscriber, P
             }
         }));
         BaseMod.registerModBadge(badgeTexture, info.Name, Strings.join(Arrays.asList(info.Authors), ','), info.Description, settingsPanel);
+
+        logger.info("Metrics Loading Runs.....");
+        metricsData.LoadRunData();
+        logger.info("Metrics Loading Runs.....Done");
     }
 
     @Override
     public void receiveStartGame() {
-        metricsData.reset();
     }
 
     @Override

@@ -72,16 +72,14 @@ public class RenderCardTipsPatch {
     }
 
     public static String getDescription(CardPickStatData data) {
-        return uiStrings.TEXT[1] + data.samplePlayers +
-                uiStrings.TEXT[2] + data.sampleSize +
-                uiStrings.TEXT[3] + data.pickRate +
-                uiStrings.TEXT[4] + data.firstPickRateF1 +
-                uiStrings.TEXT[5] + data.duplicatePickRateF1 +
-                uiStrings.TEXT[6] + data.firstPickRateF2 +
-                uiStrings.TEXT[7] + data.duplicatePickRateF2 +
-                uiStrings.TEXT[8] + data.firstPickRateF3 +
-                uiStrings.TEXT[9] + data.duplicatePickRateF3 +
-                uiStrings.TEXT[10] + data.generatedTime;
+        return uiStrings.TEXT[1] + data.sampleSize +
+                uiStrings.TEXT[2] + data.pickRate +
+                uiStrings.TEXT[3] + data.firstPickRateF1 +
+                uiStrings.TEXT[4] + data.duplicatePickRateF1 +
+                uiStrings.TEXT[5] + data.firstPickRateF2 +
+                uiStrings.TEXT[6] + data.duplicatePickRateF2 +
+                uiStrings.TEXT[7] + data.firstPickRateF3 +
+                uiStrings.TEXT[8] + data.duplicatePickRateF3;
     }
 
 }
