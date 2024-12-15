@@ -61,10 +61,8 @@ public class MetricsData {
                             try {
                                 long days = Long.parseLong(data.timestamp);
                                 data.timestamp = Long.toString(days * 86400L);
-                            } catch (NumberFormatException var18) {
-                                logger.info(
-                                        "Run file " + file.path() +
-                                                " name is could not be parsed into a Timestamp.");
+                            } catch (NumberFormatException e) {
+                                logger.info("Run file {} name is could not be parsed into a Timestamp.", file.path());
                                 data = null;
                             }
                     }
@@ -72,10 +70,8 @@ public class MetricsData {
                         try {
                             AbstractPlayer.PlayerClass.valueOf(data.character_chosen);
                             this.addFromRunData(data);
-                        } catch (NullPointerException | IllegalArgumentException var17) {
-                            logger.info("Run file " + file.path() +
-                                    " does not use a real character or mod not enabled: " +
-                                    data.character_chosen);
+                        } catch (NullPointerException | IllegalArgumentException e) {
+                            logger.debug("Run file {} does not use a real character or mod not enabled: {}", file.path(), data.character_chosen);
                         }
                 } catch (JsonSyntaxException ex) {
                     logger.info("Failed to load RunData from JSON file: " + file.path());
@@ -87,7 +83,7 @@ public class MetricsData {
     private void addFromRunData(RunData runData) {
         Set<String> pickedCards = new HashSet<>();
         runData.card_choices.forEach(choice -> {
-            if (choice.picked == "SKIP")
+            if (Objects.equals(choice.picked, "SKIP"))
                 choice.picked = null;
             this.addCardPickData(choice.picked, choice.not_picked, pickedCards, choice.floor);
             if (choice.picked != null)
@@ -141,7 +137,7 @@ public class MetricsData {
 
         for (String metricsID : notPicked) {
             CardPickData data = cardPickDataMap.get(metricsID);
-            boolean isDuplicate = deck.contains(picked);
+            boolean isDuplicate = deck.contains(metricsID);
             data.drops++;
             if (floorNum < 17) {
                 if (!isDuplicate) {

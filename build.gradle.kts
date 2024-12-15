@@ -47,7 +47,7 @@ tasks.register<Copy>("deployToPublishFolder") {
     dependsOn(tasks.clean, tasks.jar)
     from(layout.buildDirectory.dir("libs"))
     include("*.jar")
-    into(layout.buildDirectory.dir("E:\\Steam Games\\steamapps\\common\\SlayTheSpire\\metrics-mod\\content"))
+    into(layout.buildDirectory.dir("E:\\Steam Games\\steamapps\\common\\SlayTheSpire\\metrics-local-mod\\content"))
 }
 
 tasks.register<Exec>("runGame") {
