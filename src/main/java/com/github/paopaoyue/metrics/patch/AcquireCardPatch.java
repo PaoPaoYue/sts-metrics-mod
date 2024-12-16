@@ -26,7 +26,6 @@ public class AcquireCardPatch {
         Boolean discovery = Reflect.getPrivate(CardRewardScreen.class, __instance, "discovery", Boolean.class);
         Boolean chooseOne = Reflect.getPrivate(CardRewardScreen.class, __instance, "chooseOne", Boolean.class);
         Boolean draft = Reflect.getPrivate(CardRewardScreen.class, __instance, "draft", Boolean.class);
-        System.out.println("Codex: " + codex + " Discovery: " + discovery + " ChooseOne: " + chooseOne + " Draft: " + draft);
         if (!codex && !discovery && !chooseOne && !draft) {
             CardPickData cardPickData = new CardPickData();
             cardPickData.addPickedCard(hoveredCard);
@@ -36,8 +35,6 @@ public class AcquireCardPatch {
                 }
             }
             MetricsMod.metricsData.addCardPickData(cardPickData);
-        } else {
-            System.out.println("Codex: " + codex + " Discovery: " + discovery + " ChooseOne: " + chooseOne + " Draft: " + draft);
         }
     }
 }

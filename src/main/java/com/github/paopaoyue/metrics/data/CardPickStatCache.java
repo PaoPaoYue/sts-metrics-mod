@@ -39,6 +39,10 @@ public class CardPickStatCache {
         cardIdentifierBuilder.setCardId(cardID);
         cardIdentifierBuilder.setUpgraded(upgraded);
         requestBuilder.addCardIdentifiers(cardIdentifierBuilder.build());
+        if (MetricsMod.getMinAscensionLevel() > 0) {
+            requestBuilder.setAscensionMin(MetricsMod.getMinAscensionLevel());
+            requestBuilder.setAscensionMax(99);
+        }
         fetch(requestBuilder.build());
     }
 
@@ -50,6 +54,10 @@ public class CardPickStatCache {
             cardIdentifierBuilder.setCardId(card.cardID);
             cardIdentifierBuilder.setUpgraded(card.upgraded);
             requestBuilder.addCardIdentifiers(cardIdentifierBuilder.build());
+        }
+        if (MetricsMod.getMinAscensionLevel() > 0) {
+            requestBuilder.setAscensionMin(MetricsMod.getMinAscensionLevel());
+            requestBuilder.setAscensionMax(99);
         }
         fetch(requestBuilder.build());
     }
@@ -81,7 +89,7 @@ public class CardPickStatCache {
     }
 
     private String getCacheKey(String cardId, boolean upgraded) {
-        return cardId + (upgraded ? "+" : "");
+        return cardId + (upgraded ? "+" : "") + "a" + MetricsMod.getMinAscensionLevel();
     }
 
 }

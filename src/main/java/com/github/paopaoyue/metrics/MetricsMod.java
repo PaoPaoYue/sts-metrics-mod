@@ -37,7 +37,8 @@ public class MetricsMod implements StartGameSubscriber, EditStringsSubscriber, P
     private static SpireConfig config = null;
 
     public enum ConfigField {
-        DISPLAY_DISABLED("VoiceDisabled");
+        DISPLAY_DISABLED("DisplayDisabled"),
+        MIN_ASCENSION_LEVEL("MinAscensionLevel");
 
         final String id;
 
@@ -50,10 +51,20 @@ public class MetricsMod implements StartGameSubscriber, EditStringsSubscriber, P
         return config.getBool(ConfigField.DISPLAY_DISABLED.id);
     }
 
+    public static int getMinAscensionLevel() {
+        return config.getInt(ConfigField.MIN_ASCENSION_LEVEL.id);
+    }
+
     public MetricsMod() {
         BaseMod.subscribe(this);
         try {
             config = new SpireConfig(MOD_ID, "Common");
+            if (!config.has(ConfigField.DISPLAY_DISABLED.id)) {
+                config.setBool(ConfigField.DISPLAY_DISABLED.id, false);
+            }
+            if (!config.has(ConfigField.MIN_ASCENSION_LEVEL.id)) {
+                config.setInt(ConfigField.MIN_ASCENSION_LEVEL.id, 0);
+            }
         } catch (IOException e) {
             logger.error("Failed to load config", e);
         }
@@ -69,6 +80,7 @@ public class MetricsMod implements StartGameSubscriber, EditStringsSubscriber, P
 
         // disable display when silent loaded
         config.setBool(ConfigField.DISPLAY_DISABLED.id, true);
+        config.setInt(ConfigField.MIN_ASCENSION_LEVEL.id, 0);
     }
 
     @Override
@@ -81,10 +93,9 @@ public class MetricsMod implements StartGameSubscriber, EditStringsSubscriber, P
             return;
         }
         ModPanel settingsPanel = new ModPanel();
-        settingsPanel.addUIElement(new ModLabel("STS Metrics", 400.0f, 700.0f, settingsPanel, (me) -> {
-        }));
+        settingsPanel.addUIElement(new ModLabel("STS Metrics", 400.0f, 700.0f, settingsPanel, (me) -> {}));
         settingsPanel.addUIElement(new ModLabeledToggleButton("Silent Mode (Disable display and upload data only)",
-                350f, 650f, Settings.CREAM_COLOR, FontHelper.charDescFont,
+                400f, 650f, Settings.CREAM_COLOR, FontHelper.charDescFont,
                 isDisplayDisabled(), settingsPanel, (label) -> {
         }, (button) -> {
             config.setBool(ConfigField.DISPLAY_DISABLED.id, button.enabled);
@@ -94,6 +105,18 @@ public class MetricsMod implements StartGameSubscriber, EditStringsSubscriber, P
                 logger.error("Config save failed:", e);
             }
         }));
+        settingsPanel.addUIElement(new ModLabel("Statistics Filters", 400.0f, 500.0f, settingsPanel, (me) -> {}));
+        settingsPanel.addUIElement(new ModLabel("Minimum Ascension", 400.0f, 450.0f, Settings.CREAM_COLOR, FontHelper.charDescFont, settingsPanel, (me) -> {}));
+        settingsPanel.addUIElement(new ModMinMaxSlider("", 800f, 460f, 0, 20,
+                getMinAscensionLevel(), "%.0f", settingsPanel, (slider) -> {
+            config.setInt(ConfigField.MIN_ASCENSION_LEVEL.id, (int) slider.getValue());
+            try {
+                config.save();
+            } catch (IOException e) {
+                logger.error("Config save failed:", e);
+            }
+        }));
+
         BaseMod.registerModBadge(badgeTexture, info.Name, Strings.join(Arrays.asList(info.Authors), ','), info.Description, settingsPanel);
     }
 

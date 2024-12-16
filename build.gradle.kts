@@ -27,7 +27,7 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 
-    implementation(files("C:\\Users\\LENOVO\\Desktop\\projects\\rpc-mod\\build\\libs\\rpc-mod-0.1.1-stsMod.jar"))
+    implementation(files("C:\\Users\\LENOVO\\Desktop\\projects\\rpc-mod\\build\\libs\\rpc-mod-0.1.3-stsMod.jar"))
     implementation(files("C:\\Users\\LENOVO\\Desktop\\projects\\mtsLib\\BaseMod.jar"))
     implementation(files("C:\\Users\\LENOVO\\Desktop\\projects\\mtsLib\\desktop-1.0.jar"))
     implementation(files("C:\\Users\\LENOVO\\Desktop\\projects\\mtsLib\\ModTheSpire.jar"))
