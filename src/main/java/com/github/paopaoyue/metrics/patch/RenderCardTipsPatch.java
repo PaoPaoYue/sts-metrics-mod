@@ -1,6 +1,7 @@
 package com.github.paopaoyue.metrics.patch;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.evacipated.cardcrawl.modthespire.lib.ByRef;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePostfixPatch;
 import com.github.paopaoyue.metrics.MetricsMod;
@@ -29,6 +30,7 @@ public class RenderCardTipsPatch {
     private static final UIStrings uiStrings = CardCrawlGame.languagePack.getUIString("Metrics:CardPickTips");
 
     static final float BODY_TEXT_WIDTH = 280.0F * Settings.scale;
+    static final float BOX_EDGE_H = 32.0F * Settings.scale;
     static final float TIP_DESC_LINE_SPACING = 26.0F * Settings.scale;
 
     static Method renderTipBoxMethod;
@@ -43,7 +45,7 @@ public class RenderCardTipsPatch {
     }
 
     @SpirePostfixPatch
-    public static void Postfix(float x, float y, SpriteBatch sb) {
+    public static void Postfix(float x, @ByRef float[] y, SpriteBatch sb) {
         if (MetricsMod.isDisplayDisabled()) return;
         Boolean isCard = Reflect.getStaticPrivate(TipHelper.class,"isCard", Boolean.class);
         if (Boolean.FALSE.equals(isCard)) {
@@ -61,7 +63,8 @@ public class RenderCardTipsPatch {
             String description = getDescription(data);
             float textHeight = -FontHelper.getSmartHeight(FontHelper.tipBodyFont, description, BODY_TEXT_WIDTH, TIP_DESC_LINE_SPACING) - 7.0F * Settings.scale;
             Reflect.setStaticPrivate(TipHelper.class, "textHeight", textHeight);
-            renderTipBoxMethod.invoke(null, x, y, sb, getTitle(), getDescription(data));
+            renderTipBoxMethod.invoke(null, x, y[0], sb, getTitle(), getDescription(data));
+            y[0] -= textHeight + BOX_EDGE_H * 3.15F;
         } catch (IllegalAccessException | InvocationTargetException e) {
             logger.error(e.getMessage(), e);
         }

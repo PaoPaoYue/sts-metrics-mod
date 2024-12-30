@@ -1,6 +1,7 @@
 package com.github.paopaoyue.metrics.patch;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.evacipated.cardcrawl.modthespire.Loader;
 import com.evacipated.cardcrawl.modthespire.lib.*;
 import com.github.paopaoyue.metrics.MetricsMod;
 import com.github.paopaoyue.metrics.data.CardPickStatData;
@@ -143,7 +144,11 @@ public class SingleCardPopupPatch {
                     String description = RenderCardTipsPatch.getDescription(cardPickStatData);
                     float textHeight = -FontHelper.getSmartHeight(FontHelper.tipBodyFont, description, RenderCardTipsPatch.BODY_TEXT_WIDTH, RenderCardTipsPatch.TIP_DESC_LINE_SPACING) - 7.0F * Settings.scale;
                     Reflect.setStaticPrivate(TipHelper.class, "textHeight", textHeight);
-                    RenderCardTipsPatch.renderTipBoxMethod.invoke(null, Settings.WIDTH / 2f - 660.0f * Settings.scale, Settings.HEIGHT / 2f - 140f * Settings.yScale, sb, title, description);
+                    float x = Settings.WIDTH / 2f - 660.0f * Settings.scale;
+                    float y = Settings.HEIGHT / 2f - 140f * Settings.yScale;
+                    if (Loader.isModLoaded("sts-metrics-local"))
+                        y -= 300f * Settings.yScale;
+                    RenderCardTipsPatch.renderTipBoxMethod.invoke(null, x, y, sb, title, description);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     logger.error(e.getMessage(), e);
                 }
