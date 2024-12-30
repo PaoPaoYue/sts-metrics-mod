@@ -131,7 +131,7 @@ public class SingleCardPopupPatch {
                     Reflect.setStaticPrivate(TipHelper.class, "textHeight", textHeight);
                     float x = Settings.WIDTH / 2f - 660.0f * Settings.scale;
                     float y = Settings.HEIGHT / 2f - 140f * Settings.yScale;
-                    if (Loader.isModLoaded("sts-metrics")) x -= 300.0f * Settings.scale;
+                    if (Loader.isModLoaded("sts-metrics")) x += 35.0f * Settings.scale;
                     RenderCardTipsPatch.renderTipBoxMethod.invoke(null, x, y, sb, title, description);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     logger.error(e.getMessage(), e);

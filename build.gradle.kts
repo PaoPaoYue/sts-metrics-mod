@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "com.github.paopaoyue"
-version = "0.1.0-local"
+version = "0.1.1-local"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
