@@ -5,6 +5,7 @@ import com.github.paopaoyue.metrics.MetricsMod;
 import com.github.paopaoyue.metrics.data.CardPickData;
 import com.github.paopaoyue.metrics.data.MetricsData;
 import com.megacrit.cardcrawl.cards.AbstractCard;
+import com.megacrit.cardcrawl.helpers.ModHelper;
 import com.megacrit.cardcrawl.screens.CardRewardScreen;
 import com.megacrit.cardcrawl.shop.ShopScreen;
 import javassist.CtBehavior;
@@ -21,6 +22,7 @@ public class PurchaseCardPatch {
             locator = Locator.class
     )
     public static void Prefix(ShopScreen __instance, AbstractCard hoveredCard) {
+        if (ModHelper.isModEnabled("sts-metrics")) return;
         CardFieldPatch.pickRate.set(hoveredCard, null);
     }
 

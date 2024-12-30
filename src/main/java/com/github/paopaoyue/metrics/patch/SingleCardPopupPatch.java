@@ -12,6 +12,7 @@ import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.cards.CardGroup;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.FontHelper;
+import com.megacrit.cardcrawl.helpers.ModHelper;
 import com.megacrit.cardcrawl.helpers.TipHelper;
 import com.megacrit.cardcrawl.screens.SingleCardViewPopup;
 import javassist.CtBehavior;
@@ -104,6 +105,7 @@ public class SingleCardPopupPatch {
         @SpirePostfixPatch
         public static void Postfix(SingleCardViewPopup __instance, SpriteBatch sb) {
             if (MetricsMod.isDisplayDisabled()) return;
+            if (ModHelper.isModEnabled("sts-metrics")) return;
             if (cardPickStatData != null) {
                 FontHelper.renderFont(sb, FontHelper.SCP_cardEnergyFont, cardPickStatData.pickRate, Settings.WIDTH / 2.0f + 80.0f * Settings.scale, Settings.HEIGHT / 2.0f - 360.0f * Settings.scale, Settings.CREAM_COLOR);
             }
@@ -128,7 +130,10 @@ public class SingleCardPopupPatch {
                     String description = RenderCardTipsPatch.getDescription(cardPickStatData);
                     float textHeight = -FontHelper.getSmartHeight(FontHelper.tipBodyFont, description, RenderCardTipsPatch.BODY_TEXT_WIDTH, RenderCardTipsPatch.TIP_DESC_LINE_SPACING) - 7.0F * Settings.scale;
                     Reflect.setStaticPrivate(TipHelper.class, "textHeight", textHeight);
-                    RenderCardTipsPatch.renderTipBoxMethod.invoke(null, Settings.WIDTH / 2f - 660.0f * Settings.scale, Settings.HEIGHT / 2f - 140f * Settings.yScale, sb, title, description);
+                    float x = Settings.WIDTH / 2f - 660.0f * Settings.scale;
+                    float y = Settings.HEIGHT / 2f - 140f * Settings.yScale;
+                    if (ModHelper.isModEnabled("sts-metrics")) x -= 230.0f * Settings.scale;
+                    RenderCardTipsPatch.renderTipBoxMethod.invoke(null, x, y, sb, title, description);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     logger.error(e.getMessage(), e);
                 }

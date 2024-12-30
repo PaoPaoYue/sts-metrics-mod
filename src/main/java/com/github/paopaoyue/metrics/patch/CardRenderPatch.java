@@ -9,6 +9,7 @@ import com.github.paopaoyue.metrics.data.CardPickStatData;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.FontHelper;
+import com.megacrit.cardcrawl.helpers.ModHelper;
 
 @SpirePatch(
         clz = AbstractCard.class,
@@ -19,6 +20,7 @@ public class CardRenderPatch {
     @SpirePostfixPatch
     public static void Postfix(AbstractCard __instance, SpriteBatch sb) {
         if (MetricsMod.isDisplayDisabled()) return;
+        if (ModHelper.isModEnabled("sts-metrics")) return;
         CardPickStatData data = CardFieldPatch.pickRate.get(__instance);
         if (data != null) {
             FontHelper.renderRotatedText(sb,
