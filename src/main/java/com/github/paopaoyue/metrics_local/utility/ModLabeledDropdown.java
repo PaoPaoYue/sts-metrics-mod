@@ -1,4 +1,4 @@
-package com.github.paopaoyue.metrics.utility;
+package com.github.paopaoyue.metrics_local.utility;
 
 import basemod.patches.com.megacrit.cardcrawl.helpers.TipHelper.HeaderlessTip;
 import com.megacrit.cardcrawl.core.Settings;

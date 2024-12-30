@@ -1,21 +1,22 @@
-package com.github.paopaoyue.metrics;
+package com.github.paopaoyue.metrics_local;
 
 import basemod.*;
 import basemod.interfaces.EditStringsSubscriber;
 import basemod.interfaces.PostDeathSubscriber;
 import basemod.interfaces.PostInitializeSubscriber;
-import basemod.interfaces.StartGameSubscriber;
 import com.badlogic.gdx.graphics.Texture;
 import com.evacipated.cardcrawl.modthespire.Loader;
+import com.evacipated.cardcrawl.modthespire.MTSClassPool;
 import com.evacipated.cardcrawl.modthespire.ModInfo;
 import com.evacipated.cardcrawl.modthespire.lib.SpireConfig;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
-import com.github.paopaoyue.metrics.data.MetricsData;
-import com.github.paopaoyue.metrics.utility.ModLabeledDropdown;
+import com.github.paopaoyue.metrics_local.data.MetricsData;
+import com.github.paopaoyue.metrics_local.utility.ModLabeledDropdown;
 import com.google.gson.Gson;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.FontHelper;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
+import com.megacrit.cardcrawl.helpers.ModHelper;
 import com.megacrit.cardcrawl.localization.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -124,6 +125,6 @@ public class MetricsMod implements PostDeathSubscriber, EditStringsSubscriber, P
                 language = "eng";
                 break;
         }
-        BaseMod.loadCustomStringsFile(UIStrings.class, "localization/" + language + "/metrics_ui.json");
+        BaseMod.loadCustomStringsFile(UIStrings.class, "localization/" + language + "/metrics_local_ui.json");
     }
 }

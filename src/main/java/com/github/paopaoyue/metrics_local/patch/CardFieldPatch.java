@@ -1,8 +1,8 @@
-package com.github.paopaoyue.metrics.patch;
+package com.github.paopaoyue.metrics_local.patch;
 
 import com.evacipated.cardcrawl.modthespire.lib.SpireField;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
-import com.github.paopaoyue.metrics.data.CardPickStatData;
+import com.github.paopaoyue.metrics_local.data.CardPickStatData;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 
 @SpirePatch(

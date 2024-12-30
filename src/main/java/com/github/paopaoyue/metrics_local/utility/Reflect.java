@@ -1,4 +1,4 @@
-package com.github.paopaoyue.metrics.utility;
+package com.github.paopaoyue.metrics_local.utility;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

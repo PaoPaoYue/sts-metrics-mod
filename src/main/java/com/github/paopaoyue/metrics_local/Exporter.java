@@ -1,7 +1,7 @@
-package com.github.paopaoyue.metrics;
+package com.github.paopaoyue.metrics_local;
 
 import basemod.ModLabel;
-import com.github.paopaoyue.metrics.data.CardPickData;
+import com.github.paopaoyue.metrics_local.data.CardPickData;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.CardCrawlGame;

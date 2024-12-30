@@ -1,18 +1,17 @@
-package com.github.paopaoyue.metrics.patch;
+package com.github.paopaoyue.metrics_local.patch;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.evacipated.cardcrawl.modthespire.Loader;
 import com.evacipated.cardcrawl.modthespire.lib.*;
-import com.github.paopaoyue.metrics.MetricsMod;
-import com.github.paopaoyue.metrics.data.CardPickData;
-import com.github.paopaoyue.metrics.data.CardPickStatData;
-import com.github.paopaoyue.metrics.utility.Async;
-import com.github.paopaoyue.metrics.utility.Inject;
-import com.github.paopaoyue.metrics.utility.Reflect;
+import com.github.paopaoyue.metrics_local.MetricsMod;
+import com.github.paopaoyue.metrics_local.data.CardPickData;
+import com.github.paopaoyue.metrics_local.data.CardPickStatData;
+import com.github.paopaoyue.metrics_local.utility.Inject;
+import com.github.paopaoyue.metrics_local.utility.Reflect;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.cards.CardGroup;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.FontHelper;
-import com.megacrit.cardcrawl.helpers.ModHelper;
 import com.megacrit.cardcrawl.helpers.TipHelper;
 import com.megacrit.cardcrawl.screens.SingleCardViewPopup;
 import javassist.CtBehavior;
@@ -105,7 +104,7 @@ public class SingleCardPopupPatch {
         @SpirePostfixPatch
         public static void Postfix(SingleCardViewPopup __instance, SpriteBatch sb) {
             if (MetricsMod.isDisplayDisabled()) return;
-            if (ModHelper.isModEnabled("sts-metrics")) return;
+            if (Loader.isModLoaded("sts-metrics")) return;
             if (cardPickStatData != null) {
                 FontHelper.renderFont(sb, FontHelper.SCP_cardEnergyFont, cardPickStatData.pickRate, Settings.WIDTH / 2.0f + 80.0f * Settings.scale, Settings.HEIGHT / 2.0f - 360.0f * Settings.scale, Settings.CREAM_COLOR);
             }
@@ -132,7 +131,7 @@ public class SingleCardPopupPatch {
                     Reflect.setStaticPrivate(TipHelper.class, "textHeight", textHeight);
                     float x = Settings.WIDTH / 2f - 660.0f * Settings.scale;
                     float y = Settings.HEIGHT / 2f - 140f * Settings.yScale;
-                    if (ModHelper.isModEnabled("sts-metrics")) x -= 230.0f * Settings.scale;
+                    if (Loader.isModLoaded("sts-metrics")) x -= 300.0f * Settings.scale;
                     RenderCardTipsPatch.renderTipBoxMethod.invoke(null, x, y, sb, title, description);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     logger.error(e.getMessage(), e);

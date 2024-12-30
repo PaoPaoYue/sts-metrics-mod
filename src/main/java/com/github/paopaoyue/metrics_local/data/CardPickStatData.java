@@ -1,4 +1,4 @@
-package com.github.paopaoyue.metrics.data;
+package com.github.paopaoyue.metrics_local.data;
 
 public class CardPickStatData {
 

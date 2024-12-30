@@ -1,7 +1,7 @@
 {
-  "Metrics:CardPickTips": {
+  "MetricsLocal:CardPickTips": {
     "TEXT": [
-      "Pick Rate Statistics",
+      "Local Pick Rate Statistics",
       "Among #b",
       " card drops: NL Total pick rate #y",
       " NL ACT 1 first pick  #y",
