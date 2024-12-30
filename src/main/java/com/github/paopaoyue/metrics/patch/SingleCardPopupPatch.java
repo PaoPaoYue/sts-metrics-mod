@@ -144,7 +144,7 @@ public class SingleCardPopupPatch {
                     String description = RenderCardTipsPatch.getDescription(cardPickStatData);
                     float textHeight = -FontHelper.getSmartHeight(FontHelper.tipBodyFont, description, RenderCardTipsPatch.BODY_TEXT_WIDTH, RenderCardTipsPatch.TIP_DESC_LINE_SPACING) - 7.0F * Settings.scale;
                     Reflect.setStaticPrivate(TipHelper.class, "textHeight", textHeight);
-                    float x = Settings.WIDTH / 2f - 660.0f * Settings.scale;
+                    float x = Settings.WIDTH / 2f - 640.0f * Settings.scale;
                     float y = Settings.HEIGHT / 2f - 140f * Settings.yScale;
                     if (Loader.isModLoaded("sts-metrics-local"))
                         x -= 300f * Settings.yScale;
