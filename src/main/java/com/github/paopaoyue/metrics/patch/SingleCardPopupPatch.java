@@ -147,7 +147,7 @@ public class SingleCardPopupPatch {
                     float x = Settings.WIDTH / 2f - 660.0f * Settings.scale;
                     float y = Settings.HEIGHT / 2f - 140f * Settings.yScale;
                     if (Loader.isModLoaded("sts-metrics-local"))
-                        y -= 300f * Settings.yScale;
+                        x -= 300f * Settings.yScale;
                     RenderCardTipsPatch.renderTipBoxMethod.invoke(null, x, y, sb, title, description);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     logger.error(e.getMessage(), e);
