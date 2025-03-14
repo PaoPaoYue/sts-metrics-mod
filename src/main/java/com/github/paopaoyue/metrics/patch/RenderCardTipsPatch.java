@@ -46,7 +46,7 @@ public class RenderCardTipsPatch {
 
     @SpirePostfixPatch
     public static void Postfix(float x, @ByRef float[] y, SpriteBatch sb) {
-        if (MetricsMod.isDisplayDisabled()) return;
+        if (MetricsMod.isDisplayDisabled() || MetricsMod.isDetailsDisabled()) return;
         Boolean isCard = Reflect.getStaticPrivate(TipHelper.class,"isCard", Boolean.class);
         if (Boolean.FALSE.equals(isCard)) {
             return;

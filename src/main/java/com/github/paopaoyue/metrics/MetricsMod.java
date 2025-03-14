@@ -38,6 +38,7 @@ public class MetricsMod implements StartGameSubscriber, EditStringsSubscriber, P
 
     public enum ConfigField {
         DISPLAY_DISABLED("DisplayDisabled"),
+        DETAILS_DISABLED("DetailsDisabled"),
         MIN_ASCENSION_LEVEL("MinAscensionLevel");
 
         final String id;
@@ -51,6 +52,10 @@ public class MetricsMod implements StartGameSubscriber, EditStringsSubscriber, P
         return config.getBool(ConfigField.DISPLAY_DISABLED.id);
     }
 
+    public static boolean isDetailsDisabled() {
+        return config.getBool(ConfigField.DETAILS_DISABLED.id);
+    }
+
     public static int getMinAscensionLevel() {
         return config.getInt(ConfigField.MIN_ASCENSION_LEVEL.id);
     }
@@ -61,6 +66,9 @@ public class MetricsMod implements StartGameSubscriber, EditStringsSubscriber, P
             config = new SpireConfig(MOD_ID, "Common");
             if (!config.has(ConfigField.DISPLAY_DISABLED.id)) {
                 config.setBool(ConfigField.DISPLAY_DISABLED.id, false);
+            }
+            if (!config.has(ConfigField.DETAILS_DISABLED.id)) {
+                config.setBool(ConfigField.DETAILS_DISABLED.id, false);
             }
             if (!config.has(ConfigField.MIN_ASCENSION_LEVEL.id)) {
                 config.setInt(ConfigField.MIN_ASCENSION_LEVEL.id, 0);
@@ -80,6 +88,7 @@ public class MetricsMod implements StartGameSubscriber, EditStringsSubscriber, P
 
         // disable display when silent loaded
         config.setBool(ConfigField.DISPLAY_DISABLED.id, true);
+        config.setBool(ConfigField.DETAILS_DISABLED.id, true);
         config.setInt(ConfigField.MIN_ASCENSION_LEVEL.id, 0);
     }
 
@@ -99,6 +108,17 @@ public class MetricsMod implements StartGameSubscriber, EditStringsSubscriber, P
                 isDisplayDisabled(), settingsPanel, (label) -> {
         }, (button) -> {
             config.setBool(ConfigField.DISPLAY_DISABLED.id, button.enabled);
+            try {
+                config.save();
+            } catch (IOException e) {
+                logger.error("Config save failed:", e);
+            }
+        }));
+        settingsPanel.addUIElement(new ModLabeledToggleButton("Disable display metrics details",
+                400f, 600f, Settings.CREAM_COLOR, FontHelper.charDescFont,
+                isDetailsDisabled(), settingsPanel, (label) -> {
+        }, (button) -> {
+            config.setBool(ConfigField.DETAILS_DISABLED.id, button.enabled);
             try {
                 config.save();
             } catch (IOException e) {

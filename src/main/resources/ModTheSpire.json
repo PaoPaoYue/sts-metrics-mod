@@ -5,7 +5,7 @@
     "PaoPaoYue"
   ],
   "description": "A mod that aiming to share the gameplay metrics between players and facilitate modder on improving their mod. \n\nCurrent function includes: \n  - Card Pick Rate statistics \nYou can disable display statistics and upload data only in the mod configuration menu. \n\nAuthor:PaoPaoYue \nDiscord:https://discord.gg/CYW2drGMxC \nQ群: 787757483",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "sts_version": "12-12-2020",
   "mts_version": "3.10.1",
   "dependencies": [
