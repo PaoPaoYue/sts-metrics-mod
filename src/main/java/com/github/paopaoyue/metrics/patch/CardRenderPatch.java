@@ -18,7 +18,7 @@ public class CardRenderPatch {
 
     @SpirePostfixPatch
     public static void Postfix(AbstractCard __instance, SpriteBatch sb) {
-        if (MetricsMod.isDisplayDisabled()) return;
+        if (MetricsMod.isDisplayDisabled() || MetricsMod.isPercentageDisabled()) return;
         CardPickStatData data = CardFieldPatch.pickRate.get(__instance);
         if (data != null) {
             FontHelper.renderRotatedText(sb,

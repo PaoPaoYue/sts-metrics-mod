@@ -39,6 +39,7 @@ public class MetricsMod implements StartGameSubscriber, EditStringsSubscriber, P
     public enum ConfigField {
         DISPLAY_DISABLED("DisplayDisabled"),
         DETAILS_DISABLED("DetailsDisabled"),
+        PERCENTAGE_DISABLED("PercentageDisabled"),
         MIN_ASCENSION_LEVEL("MinAscensionLevel");
 
         final String id;
@@ -56,6 +57,10 @@ public class MetricsMod implements StartGameSubscriber, EditStringsSubscriber, P
         return config.getBool(ConfigField.DETAILS_DISABLED.id);
     }
 
+    public static boolean isPercentageDisabled() {
+        return config.getBool(ConfigField.PERCENTAGE_DISABLED.id);
+    }
+
     public static int getMinAscensionLevel() {
         return config.getInt(ConfigField.MIN_ASCENSION_LEVEL.id);
     }
@@ -69,6 +74,9 @@ public class MetricsMod implements StartGameSubscriber, EditStringsSubscriber, P
             }
             if (!config.has(ConfigField.DETAILS_DISABLED.id)) {
                 config.setBool(ConfigField.DETAILS_DISABLED.id, false);
+            }
+            if (!config.has(ConfigField.PERCENTAGE_DISABLED.id)) {
+                config.setBool(ConfigField.PERCENTAGE_DISABLED.id, false);
             }
             if (!config.has(ConfigField.MIN_ASCENSION_LEVEL.id)) {
                 config.setInt(ConfigField.MIN_ASCENSION_LEVEL.id, 0);
@@ -114,11 +122,22 @@ public class MetricsMod implements StartGameSubscriber, EditStringsSubscriber, P
                 logger.error("Config save failed:", e);
             }
         }));
-        settingsPanel.addUIElement(new ModLabeledToggleButton("Disable display metrics details",
+        settingsPanel.addUIElement(new ModLabeledToggleButton("Disable metrics details display",
                 400f, 600f, Settings.CREAM_COLOR, FontHelper.charDescFont,
                 isDetailsDisabled(), settingsPanel, (label) -> {
         }, (button) -> {
             config.setBool(ConfigField.DETAILS_DISABLED.id, button.enabled);
+            try {
+                config.save();
+            } catch (IOException e) {
+                logger.error("Config save failed:", e);
+            }
+        }));
+        settingsPanel.addUIElement(new ModLabeledToggleButton("Disable percentage display",
+                400f, 550f, Settings.CREAM_COLOR, FontHelper.charDescFont,
+                isPercentageDisabled(), settingsPanel, (label) -> {
+        }, (button) -> {
+            config.setBool(ConfigField.PERCENTAGE_DISABLED.id, button.enabled);
             try {
                 config.save();
             } catch (IOException e) {
